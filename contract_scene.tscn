@@ -1,0 +1,303 @@
+[gd_scene load_steps=13 format=3 uid="uid://cnrav4gglg5bm"]
+
+[ext_resource type="Script" path="res://code/contract_scene_data.gd" id="1_54k52"]
+[ext_resource type="Script" path="res://code/linecurrent.gd" id="2_8m51f"]
+[ext_resource type="Script" path="res://code/ContractGameProgress.gd" id="3_ncg36"]
+[ext_resource type="Script" path="res://code/contracttext.gd" id="4_7kp3o"]
+[ext_resource type="Script" path="res://code/signname.gd" id="5_mp3jg"]
+[ext_resource type="Script" path="res://code/contracttimer.gd" id="6_a2uf6"]
+[ext_resource type="Script" path="res://code/popupstart.gd" id="7_rvlks"]
+[ext_resource type="Script" path="res://code/popupmenuname.gd" id="8_cfsa1"]
+
+[sub_resource type="Gradient" id="Gradient_202da"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ft3qb"]
+gradient = SubResource("Gradient_202da")
+width = 1400
+height = 50
+fill_from = Vector2(0.930464, 0.463576)
+fill_to = Vector2(0, 1)
+repeat = 2
+
+[sub_resource type="ImageTexture" id="ImageTexture_nvqoy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dujbh"]
+corner_radius_top_left = 25
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="ContractScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_54k52")
+
+[node name="background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxC_one" type="HBoxContainer" parent="Margin"]
+custom_minimum_size = Vector2(500, 250)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="VBoxC_one" type="VBoxContainer" parent="Margin/HBoxC_one"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="ULabel" type="Label" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+text = "UNT"
+horizontal_alignment = 1
+
+[node name="Units" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+tooltip_text = "UNT > 255, 0, 0
+"
+max_value = 1e+10
+step = 100.0
+rounded = true
+
+[node name="SLabel" type="Label" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+text = "SPU"
+horizontal_alignment = 1
+
+[node name="Sell per unit" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+tooltip_text = "SPU < 210, 0, 244"
+max_value = 1e+09
+step = 5.0
+rounded = true
+
+[node name="CLabel" type="Label" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+text = "BID"
+horizontal_alignment = 1
+
+[node name="Contract bid" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
+layout_mode = 2
+tooltip_text = "BID < 0, 164, 74."
+max_value = 1e+09
+step = 100.0
+rounded = true
+
+[node name="PanelC_one" type="PanelContainer" parent="Margin/HBoxC_one"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineCurrent" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
+points = PackedVector2Array(0, 0, 63, 131, 181, 50, 243, 161)
+width = 5.0
+script = ExtResource("2_8m51f")
+
+[node name="LineMinUnits" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
+points = PackedVector2Array(0, 250, 247, 250)
+width = 5.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="LineAcceptancePerUnit" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
+position = Vector2(0, 250)
+points = PackedVector2Array(1, -147, 245, 0)
+width = 5.0
+default_color = Color(0.823529, 0, 0.956863, 1)
+
+[node name="LineMaxBid" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
+points = PackedVector2Array(-2, 160, 243, 109)
+width = 5.0
+default_color = Color(0, 0.643137, 0.290196, 1)
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Margin"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 64.0
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture2D_ft3qb")
+script = ExtResource("3_ncg36")
+
+[node name="Pol" type="PanelContainer" parent="Margin"]
+custom_minimum_size = Vector2(500, 250)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="GridC" type="GridContainer" parent="Margin/Pol"]
+layout_mode = 2
+columns = 4
+
+[node name="pol1" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+texture_normal = SubResource("ImageTexture_nvqoy")
+
+[node name="pol2" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol3" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol4" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol5" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol6" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol7" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="pol8" type="TextureButton" parent="Margin/Pol/GridC"]
+custom_minimum_size = Vector2(125, 125)
+layout_mode = 2
+
+[node name="HBoxC_two" type="HBoxContainer" parent="Margin"]
+custom_minimum_size = Vector2(550, 250)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="PanelC_two" type="PanelContainer" parent="Margin/HBoxC_two"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxC_two" type="VBoxContainer" parent="Margin/HBoxC_two"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Opponent Units" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Graphical BS" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Opponent Sell per unit" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Opponent Sell per unit2" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="Means nothing" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="haha funny sex number" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Margin"]
+editor_description = "The text of the contract, Describes the gun required. who is winning the contract, and a bunch of legaleze to make it harder to parse."
+custom_minimum_size = Vector2(600, 350)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_dujbh")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin/PanelContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="Contract" type="RichTextLabel" parent="Margin/PanelContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "   "
+script = ExtResource("4_7kp3o")
+
+[node name="Signname" type="LineEdit" parent="Margin/PanelContainer/VBoxContainer"]
+editor_description = "Has stupid rules to follow, like must begin with X third letter must be not a letter, ect (probably the most complicated mirco on the board)"
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_vertical = 8
+placeholder_text = "Sign here"
+script = ExtResource("5_mp3jg")
+alphabet = null
+
+[node name="ContractTimer" type="Timer" parent="."]
+wait_time = 32.0
+script = ExtResource("6_a2uf6")
+
+[node name="PopupMenustart" type="PopupMenu" parent="."]
+disable_3d = true
+title = "WELCOME TO HELL, NEGOTIATE YOUR ESCAPE!"
+position = Vector2i(500, 200)
+size = Vector2i(400, 300)
+always_on_top = true
+theme_override_font_sizes/font_size = 30
+submenu_popup_delay = 0.05
+item_count = 3
+item_0/text = "WELCOME TO HELL"
+item_0/id = 1
+item_0/disabled = true
+item_0/separator = true
+item_1/text = "            START GAME"
+item_1/id = 0
+item_2/text = "HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
+item_2/id = 2
+item_2/disabled = true
+item_2/separator = true
+script = ExtResource("7_rvlks")
+
+[node name="PopupMenuname" type="PopupMenu" parent="."]
+position = Vector2i(500, 200)
+item_count = 1
+item_0/text = ""
+item_0/id = 0
+script = ExtResource("8_cfsa1")
+
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Units" to="." method="_on_units_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Units" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_units_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Sell per unit" to="." method="_on_sell_per_unit_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Sell per unit" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_sell_per_unit_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Contract bid" to="." method="_on_contract_bid_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Contract bid" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_contract_bid_value_changed"]
+[connection signal="text_changed" from="Margin/PanelContainer/VBoxContainer/Signname" to="Margin/PanelContainer/VBoxContainer/ScrollContainer/Contract" method="_on_signname_text_changed"]
+[connection signal="timeout" from="ContractTimer" to="." method="_on_contract_timer_timeout"]
+[connection signal="timeout" from="ContractTimer" to="Margin/TextureProgressBar" method="_on_contract_timer_timeout"]
+[connection signal="id_pressed" from="PopupMenustart" to="Margin/TextureProgressBar" method="_on_popup_menu_id_pressed"]
+[connection signal="id_pressed" from="PopupMenustart" to="ContractTimer" method="_on_popup_menu_id_pressed"]
+[connection signal="popup_hide" from="PopupMenuname" to="PopupMenustart" method="_on_popup_menu_popup_hide"]
