@@ -1,13 +1,18 @@
-[gd_scene load_steps=13 format=3 uid="uid://cnrav4gglg5bm"]
+[gd_scene load_steps=23 format=3 uid="uid://4ky4vyfkaep4"]
 
 [ext_resource type="Script" path="res://code/contract_scene_data.gd" id="1_54k52"]
 [ext_resource type="Script" path="res://code/linecurrent.gd" id="2_8m51f"]
-[ext_resource type="Script" path="res://code/ContractGameProgress.gd" id="3_ncg36"]
+[ext_resource type="Script" path="res://code/lineminunits.gd" id="3_k4i0b"]
 [ext_resource type="Script" path="res://code/contracttext.gd" id="4_7kp3o"]
+[ext_resource type="Script" path="res://code/lineacceptperunit.gd" id="4_j6i6l"]
+[ext_resource type="Script" path="res://code/linemaxbid.gd" id="5_7sbr6"]
 [ext_resource type="Script" path="res://code/signname.gd" id="5_mp3jg"]
+[ext_resource type="Script" path="res://code/contractbarprogress.gd" id="6_577m7"]
 [ext_resource type="Script" path="res://code/contracttimer.gd" id="6_a2uf6"]
 [ext_resource type="Script" path="res://code/popupstart.gd" id="7_rvlks"]
+[ext_resource type="Script" path="res://code/vboxc_two.gd" id="7_xshw6"]
 [ext_resource type="Script" path="res://code/popupmenuname.gd" id="8_cfsa1"]
+[ext_resource type="Script" path="res://code/popupbreather.gd" id="13_r2gyy"]
 
 [sub_resource type="Gradient" id="Gradient_202da"]
 
@@ -19,7 +24,33 @@ fill_from = Vector2(0.930464, 0.463576)
 fill_to = Vector2(0, 1)
 repeat = 2
 
-[sub_resource type="ImageTexture" id="ImageTexture_nvqoy"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_43jd7"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_il0r8"]
+width = 125
+height = 125
+as_normal_map = true
+bump_strength = 15.0
+noise = SubResource("FastNoiseLite_43jd7")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_sivh0"]
+noise_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0wtjm"]
+width = 125
+height = 125
+as_normal_map = true
+noise = SubResource("FastNoiseLite_sivh0")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_uupor"]
+seed = 500
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6802a"]
+width = 125
+height = 125
+as_normal_map = true
+bump_strength = 32.0
+noise = SubResource("FastNoiseLite_uupor")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dujbh"]
 corner_radius_top_left = 25
@@ -86,7 +117,7 @@ layout_mode = 2
 text = "SPU"
 horizontal_alignment = 1
 
-[node name="Sell per unit" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
+[node name="SPunit" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
 layout_mode = 2
 tooltip_text = "SPU < 210, 0, 244"
 max_value = 1e+09
@@ -98,7 +129,7 @@ layout_mode = 2
 text = "BID"
 horizontal_alignment = 1
 
-[node name="Contract bid" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
+[node name="CBid" type="SpinBox" parent="Margin/HBoxC_one/VBoxC_one"]
 layout_mode = 2
 tooltip_text = "BID < 0, 164, 74."
 max_value = 1e+09
@@ -110,25 +141,27 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LineCurrent" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
-points = PackedVector2Array(0, 0, 63, 131, 181, 50, 243, 161)
+points = PackedVector2Array(0, 0, 96, 0, 180, 0, 247, 0)
 width = 5.0
 script = ExtResource("2_8m51f")
 
 [node name="LineMinUnits" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
-points = PackedVector2Array(0, 250, 247, 250)
+points = PackedVector2Array(0, 0, 0, 0)
 width = 5.0
 default_color = Color(1, 0, 0, 1)
+script = ExtResource("3_k4i0b")
 
 [node name="LineAcceptancePerUnit" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
-position = Vector2(0, 250)
-points = PackedVector2Array(1, -147, 245, 0)
+points = PackedVector2Array(0, 0, 0, 0)
 width = 5.0
 default_color = Color(0.823529, 0, 0.956863, 1)
+script = ExtResource("4_j6i6l")
 
 [node name="LineMaxBid" type="Line2D" parent="Margin/HBoxC_one/PanelC_one"]
-points = PackedVector2Array(-2, 160, 243, 109)
+points = PackedVector2Array(0, 0, 0, 0)
 width = 5.0
 default_color = Color(0, 0.643137, 0.290196, 1)
+script = ExtResource("5_7sbr6")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="Margin"]
 custom_minimum_size = Vector2(0, 60)
@@ -137,7 +170,7 @@ size_flags_vertical = 4
 max_value = 64.0
 nine_patch_stretch = true
 texture_progress = SubResource("GradientTexture2D_ft3qb")
-script = ExtResource("3_ncg36")
+script = ExtResource("6_577m7")
 
 [node name="Pol" type="PanelContainer" parent="Margin"]
 custom_minimum_size = Vector2(500, 250)
@@ -147,40 +180,43 @@ size_flags_vertical = 8
 
 [node name="GridC" type="GridContainer" parent="Margin/Pol"]
 layout_mode = 2
-columns = 4
+columns = 3
 
 [node name="pol1" type="TextureButton" parent="Margin/Pol/GridC"]
+clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
-texture_normal = SubResource("ImageTexture_nvqoy")
+size_flags_horizontal = 6
+texture_normal = SubResource("NoiseTexture2D_il0r8")
 
 [node name="pol2" type="TextureButton" parent="Margin/Pol/GridC"]
+clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = SubResource("NoiseTexture2D_0wtjm")
 
 [node name="pol3" type="TextureButton" parent="Margin/Pol/GridC"]
+clip_contents = true
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = SubResource("NoiseTexture2D_6802a")
 
 [node name="pol4" type="TextureButton" parent="Margin/Pol/GridC"]
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
+size_flags_horizontal = 6
 
 [node name="pol5" type="TextureButton" parent="Margin/Pol/GridC"]
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
+size_flags_horizontal = 6
 
 [node name="pol6" type="TextureButton" parent="Margin/Pol/GridC"]
 custom_minimum_size = Vector2(125, 125)
 layout_mode = 2
-
-[node name="pol7" type="TextureButton" parent="Margin/Pol/GridC"]
-custom_minimum_size = Vector2(125, 125)
-layout_mode = 2
-
-[node name="pol8" type="TextureButton" parent="Margin/Pol/GridC"]
-custom_minimum_size = Vector2(125, 125)
-layout_mode = 2
+size_flags_horizontal = 6
 
 [node name="HBoxC_two" type="HBoxContainer" parent="Margin"]
 custom_minimum_size = Vector2(550, 250)
@@ -192,10 +228,19 @@ size_flags_vertical = 0
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Examplelinetwo" type="Line2D" parent="Margin/HBoxC_two/PanelC_two"]
+points = PackedVector2Array(0, 0, 245, 136)
+width = 5.0
+
+[node name="Examplelineone" type="Line2D" parent="Margin/HBoxC_two/PanelC_two"]
+points = PackedVector2Array(0, 249, 246, 44)
+width = 5.0
+
 [node name="VBoxC_two" type="VBoxContainer" parent="Margin/HBoxC_two"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 10
+script = ExtResource("7_xshw6")
 
 [node name="Opponent Units" type="ProgressBar" parent="Margin/HBoxC_two/VBoxC_two"]
 layout_mode = 2
@@ -255,7 +300,6 @@ layout_mode = 2
 size_flags_vertical = 8
 placeholder_text = "Sign here"
 script = ExtResource("5_mp3jg")
-alphabet = null
 
 [node name="ContractTimer" type="Timer" parent="."]
 wait_time = 32.0
@@ -284,20 +328,34 @@ script = ExtResource("7_rvlks")
 
 [node name="PopupMenuname" type="PopupMenu" parent="."]
 position = Vector2i(500, 200)
+hide_on_item_selection = false
+hide_on_checkable_item_selection = false
 item_count = 1
 item_0/text = ""
 item_0/id = 0
+item_0/disabled = true
+item_0/separator = true
 script = ExtResource("8_cfsa1")
 
+[node name="Popupbreather" type="Popup" parent="."]
+mode = 3
+script = ExtResource("13_r2gyy")
+
+[connection signal="roundover" from="." to="Margin/HBoxC_two/VBoxC_two" method="_on_contract_scene_roundover"]
 [connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Units" to="." method="_on_units_value_changed"]
 [connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Units" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_units_value_changed"]
-[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Sell per unit" to="." method="_on_sell_per_unit_value_changed"]
-[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Sell per unit" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_sell_per_unit_value_changed"]
-[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Contract bid" to="." method="_on_contract_bid_value_changed"]
-[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/Contract bid" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_contract_bid_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/SPunit" to="." method="_on_sell_per_unit_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/SPunit" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_sell_per_unit_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/CBid" to="." method="_on_contract_bid_value_changed"]
+[connection signal="value_changed" from="Margin/HBoxC_one/VBoxC_one/CBid" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_contract_bid_value_changed"]
+[connection signal="correctentered" from="Margin/PanelContainer/VBoxContainer/ScrollContainer/Contract" to="." method="_on_contract_correctentered"]
 [connection signal="text_changed" from="Margin/PanelContainer/VBoxContainer/Signname" to="Margin/PanelContainer/VBoxContainer/ScrollContainer/Contract" method="_on_signname_text_changed"]
+[connection signal="text_submitted" from="Margin/PanelContainer/VBoxContainer/Signname" to="Margin/PanelContainer/VBoxContainer/ScrollContainer/Contract" method="_on_signname_text_submitted"]
 [connection signal="timeout" from="ContractTimer" to="." method="_on_contract_timer_timeout"]
+[connection signal="timeout" from="ContractTimer" to="Margin/HBoxC_one/PanelC_one/LineCurrent" method="_on_contract_timer_timeout"]
 [connection signal="timeout" from="ContractTimer" to="Margin/TextureProgressBar" method="_on_contract_timer_timeout"]
 [connection signal="id_pressed" from="PopupMenustart" to="Margin/TextureProgressBar" method="_on_popup_menu_id_pressed"]
+[connection signal="id_pressed" from="PopupMenustart" to="Margin/HBoxC_two/VBoxC_two" method="_on_popup_menustart_id_pressed"]
 [connection signal="id_pressed" from="PopupMenustart" to="ContractTimer" method="_on_popup_menu_id_pressed"]
 [connection signal="popup_hide" from="PopupMenuname" to="PopupMenustart" method="_on_popup_menu_popup_hide"]
+[connection signal="closing" from="Popupbreather" to="Margin/TextureProgressBar" method="_on_popupbreather_closing"]

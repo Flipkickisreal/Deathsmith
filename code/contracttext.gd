@@ -1,15 +1,56 @@
 extends RichTextLabel
+
+signal correctentered
 @export var selected_name = "Al'eezra"
 var rngname = RandomNumberGenerator.new()
-var inputtext
+var part_one = "Impossible"
+var part_two = "Impossigun"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	generate()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+func generate() -> void:
+	add_text("Contract to manufacture a:")
+	var part_one_rand = rngname.randi_range(0, 5)
+	var part_two_rand = rngname.randi_range(0, 5)
+	if part_one_rand == 0:
+		part_one = "Massive"
+	elif part_one_rand == 1:
+		part_one = "Holy"
+	elif part_one_rand == 2:
+		part_one = "Shattering"
+	elif part_one_rand == 3:
+		part_one = "Flaming"
+	elif part_one_rand == 4:
+		part_one = "Sharp"
+	elif part_one_rand == 5:
+		part_one = "Shocking"
+	else:
+		part_one = "Impossible"
+		print("generation debug required")
+	if part_two_rand == 0:
+		part_two = "Rifle"
+	elif part_two_rand == 1:
+		part_two = "Shotgun"
+	elif part_two_rand == 2:
+		part_two = "Telsa"
+	elif part_two_rand == 3:
+		part_two = "Laser"
+	elif part_two_rand == 4:
+		part_two = "Pistol"
+	elif  part_two_rand == 5:
+		part_two = "RPG"
+	else:
+		part_two = "Impossible"
+		print("generation debug required")
+	add_text(part_one)
+	add_text(" ")
+	add_text(part_two)
 
 func name_select() -> String:
 	var selector = rngname.randi_range(0, 13)
@@ -58,9 +99,13 @@ func name_select() -> String:
 		return "ERR'OR_the_bug&terribbible"
 
 func _on_signname_text_changed(new_text: String) -> void:
-		clear()
-		add_text(new_text)
-		if new_text == selected_name:
-			add_text("Contract Signed!!\n You didn't forget your name did you?")
-	
-	
+	if new_text == selected_name:
+		add_text("\nSIGN HERE")
+
+
+
+func _on_signname_text_submitted(new_text: String) -> void:
+	if new_text == selected_name:
+		remove_paragraph(-1)
+		add_text("Bound, Signed, And Notorized")
+		emit_signal("correctentered")

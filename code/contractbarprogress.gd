@@ -1,5 +1,6 @@
 extends TextureProgressBar
 
+var breathe = false
 const BAR_PROGRESS = 64
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -14,7 +15,8 @@ func progress() -> void:
 	for I in BAR_PROGRESS:
 		await get_tree().create_timer(0.5).timeout
 		value += 1
-		if $"../../Popupbreather"
+		if breathe == true:
+			break
 
 
 
@@ -25,3 +27,10 @@ func _on_contract_timer_timeout() -> void:
 
 func _on_popup_menu_id_pressed(id: int) -> void:
 	progress()
+
+
+func _on_popupbreather_closing() -> void:
+	if breathe == true:
+		breathe == false
+	else:
+		breathe = true
